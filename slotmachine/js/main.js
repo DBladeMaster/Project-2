@@ -1,4 +1,11 @@
-﻿/// <reference path="../Thanks.html" />
+﻿/*
+David Harris
+October, 31, 2014 v2
+This Javascript is to allow a slotmachine to function on webpages, once the js is included on it.
+
+*/
+
+/// <reference path="../Thanks.html" />
 /// <reference path="../Thanks.html" />
 /// <reference path="jquery.js" />
 var playerMoney = 1000;
@@ -20,8 +27,18 @@ var bells = 0;
 var sevens = 0;
 var blanks = 0;
 var reel;
+var grape;
+var bar;
+var seven;
+var banana;
+var blank;
+var orange;
+var bell;
+var cherry;
 
-//Changes made to code.
+
+
+//When the program first boots up it will set the initial fps and put out a welcoming message.
 function init() {
     stage = new createjs.Stage(document.getElementById("canvas"));
     createjs.Ticker.setFPS(60);
@@ -31,12 +48,13 @@ function init() {
     drawSlotMachine();
 }
 
-
+//Handles each tick that passes in the slot machine.
 function handleTick() {
-
     stage.update();
 }
 
+
+//This function is to draw out the slot machine and add in any needed images
 function drawSlotMachine() {
     var slotmachine = new createjs.Bitmap("img/Slotmachine.jpg");
     slotmachine.scaleX = 1.2;
@@ -60,36 +78,40 @@ function drawSlotMachine() {
     reel2.x = 175;
     reel2.y = 70;
 
-    var reel2 = new createjs.Bitmap("img/reel.jpg");
-    reel2.scaleX = 0.3;
-    reel2.scaleY = 0.3;
-    reel2.x = 175;
-    reel2.y = 70;
-
     var reel3 = new createjs.Bitmap("img/reel.jpg");
     reel3.scaleX = 0.3;
     reel3.scaleY = 0.3;
     reel3.x = 250;
     reel3.y = 70;
 
-    var reel3
-    var grape = new createjs.Bitmap("img/Slot_Grapes.png")
-    var bar = new createjs.Bitmap("img/Slot_Bar.png")
-    var seven = new createjs.Bitmap("img/Slot_Seven.png")
-    var banana = new createjs.Bitmap("img/Banana.png")
-    var blank = new createjs.Bitmap("img/blank.png")
-    var orange = new createjs.Bitmap("img/Slot_Orange.png")
-    var bell = new createjs.Bitmap("img/Slot_Bell.png")
-    var cherry = new createjs.Bitmap("img/Slot_Cherry.png")
 
+    grape = new createjs.Bitmap("img/Slot_Grapes.png");
+    bar = new createjs.Bitmap("img/Slot_Bar.png");
+    seven = new createjs.Bitmap("img/Slot_Seven.png");
+    banana = new createjs.Bitmap("img/Banana.png");
+    blank = new createjs.Bitmap("img/blank.png");
+    orange = new createjs.Bitmap("img/Slot_Orange.png");
+    bell = new createjs.Bitmap("img/Slot_Bell.png");
+    cherry = new createjs.Bitmap("img/Slot_Cherry.png");
 
-    stage.addChild(slotmachine,myButton, reel, reel2, reel3 );
+    outcome = Reels();
+    //tested out alot of ways to figure out how to get the slots to work but they did not show up, nor did this. I'm out of time to continue.
+    if (outcome[0] <= 28) {
+        blank.x = 0;
+        blank.y = 0;
+    }
 
+   
+
+    //Adds in all the images as the child for this function
+    stage.addChild(slotmachine, myButton, reel, reel2, reel3, grape, bar, seven, banana,orange, bell, cherry, blank);
+    //If the button is clicked activate the click, over , and out handlers.
     myButton.addEventListener("click", clickHandler);
     myButton.addEventListener("mouseover", overHandler);
     myButton.addEventListener("mouseout", outHandler);
 }
 
+//If the user clicks on the button it will initiate the clickhandler function which will turn out the results of the spin and if they have won or lost.
 function clickHandler() {
     playerBet = $("div#betEntry>input").val();
 
@@ -168,7 +190,6 @@ function resetAll() {
     lossNumber = 0;
     winRatio = 0;
 }
-
 
 /* Check to see if the player won the jackpot */
 function checkJackPot() {
@@ -251,6 +272,9 @@ function Reels() {
                 break;
         }
     }
+
+    
+
     return betLine;
 }
 
@@ -318,40 +342,6 @@ function determineWinnings()
     
 }
 
-/* When the player clicks the spin button the game kicks off */
-$("#spinButton").click(function () {
-    playerBet = $("div#betEntry>input").val();
-
-    if (playerMoney == 0)
-    {
-        if (confirm("You ran out of Money! \nDo you want to play again?")) {
-            resetAll();
-            showPlayerStats();
-        }
-    }
-    else if (playerBet > playerMoney) {
-        alert("You don't have enough Money to place that bet.");
-    }
-    else if (playerBet < 0) {
-        alert("All bets must be a positive $ amount.");
-    }
-    else if (playerBet <= playerMoney) {
-        spinResult = Reels();
-        fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
-        $("div#result>p").text(fruits);
-        determineWinnings();
-        turn++;
-        showPlayerStats();
-    }
-    else {
-        alert("Please enter a valid bet amount");
-    }
-
-    var stage;
-
- 
-});
-
 
 /*When the player hits this button the game resets!*/
 $("#resetButton").click(function () {
@@ -362,7 +352,7 @@ $("#resetButton").click(function () {
 
 
 });
-/*When the player clicks on this button the window will close*/
+/*When the player clicks on this button the user will be redireted to another page.*/
 $("#quitButton").click(function () {
     if (confirm("Do you really wish to quit?")) {
         window.location.href = "thanks.html";

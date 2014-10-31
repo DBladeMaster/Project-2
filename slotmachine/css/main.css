@@ -1,8 +1,10 @@
-﻿ul#playerStats {
+﻿/*Puts borders around the player stats.*/
+ul#playerStats {
     list-style-type: none;
     padding: 0;
     margin: 5px;
 }
+/*Adds a canvas for the slot machine*/
 #canvas {
     border:dashed 1px black;
 }
